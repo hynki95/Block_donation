@@ -14,6 +14,8 @@ contract DonationService is BlockDonation {
      mapping(uint => funder) funders;
      }
      
+     mapping(uint => funder) check_funders;
+     
      struct funder{
         address addr;
         uint amount;
@@ -28,6 +30,14 @@ contract DonationService is BlockDonation {
      uint usage_value;
      }
     
+  
+       uint total_fund=0;
+   
+   /*function newMember(){
+       funder = msg.sender;
+       
+   }
+   */
      
     function newCampaign(string memory campaign_name, address beneficiary) public returns (uint campaignID){
         campaignID = numCampaigns++;
@@ -39,9 +49,10 @@ contract DonationService is BlockDonation {
         // Creates a new temporary memory struct, initialised with the given values
         // and copies it over to storage.
         // Note that you can also use Funder(msg.sender, msg.value) to initialise.
-        
-        c.funders[c.numFunders++] = funder({addr: msg.sender, amount: _amount, total_fund:0 });
+         total_fund+=_amount;
+        c.funders[c.numFunders++] = funder({addr: msg.sender, amount: _amount, total_fund : total_fund});
         transfer(c.campaign_address,_amount);
+       
     }
     event use_money_log(uint send_amount, string usage);
     function use_money(uint _amount, string memory _usage) public{
